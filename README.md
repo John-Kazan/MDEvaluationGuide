@@ -139,7 +139,7 @@ at this point all the commands should be entered. To run the commands simply typ
 run
 ```
 
-After processing completes type `quit` to quit the application:
+After processing is complete, type `quit` to exit the application.
 
 copy `rmsf.txt` back to your computer by running the following command on the terminal connected to your local computer
 
