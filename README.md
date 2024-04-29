@@ -8,7 +8,7 @@ Follow the MDGuide guide here: [MDGuide](https://github.com/John-Kazan/MDGuide)
 
 Follow the VPN guide here: [VPNGuide](https://github.com/John-Kazan/VPNGuide)
 
-## After logging in to SoL cluster:
+## After logging in:
 
 `pwd` shows me home directory `/home/ikazan`
 
@@ -81,7 +81,7 @@ we are going to start an interactive session by running
 interactive
 ```
 
-## Reading the trajectory and evaluation
+## Reading the trajectory
 
 load the necessary modules on sol by running:
 
@@ -89,7 +89,11 @@ load the necessary modules on sol by running:
 module load amber/22v3
 ```
 
-then we are going to start the evaluation process by running:
+then we are going to start the evaluation process by following either Option 1 or 2.
+
+## Option 1
+
+run
 
 ```
 cpptraj
@@ -125,21 +129,57 @@ autoimage origin
 rms first mass @CA,C,N
 ```
 
-Then we will evaluate the Root Mean Square Fluctuation (RMSF)
+## Option 2
+
+An easier way would be preparing the commands initially and running it later
+
+Prepare `readtraj.in` input file:
+
+```
+vim readtraj.in
+```
+
+press `i` to enter edit mode
+
+copy and paste the text below
+
+```
+parm 1btl.parm7
+trajin 1btl.nc
+strip :WAT,Cl-,Na+
+autoimage origin
+rms first mass @CA,C,N
+```
+
+press `esc` button on keyboard and then type `:wq`
+
+run:
+
+```
+cpptraj -i readtraj.in
+```
+
+## Root Mean Square Fluctuation (RMSF)
+
+We will evaluate RMSF
 
 RMSF is a measurement of flexibility. It measures how much amino acid residues of a protein move around over time during a molecular dynamics simulation. We will use the alpha carbon (CA) locations of amino acids to calculate the RMSF.
+
+if you are following option 1:
 
 ```
 atomicfluct out rmsf.txt @CA
 ```
 
-at this point all the commands should be entered. To run the commands simply type:
+ at this point all the commands should be entered. To run the commands simply type:
 
 ```
 run
 ```
 
 After processing is complete, type `quit` to exit the application.
+
+if you are following option 2 add the line at the end of the file and run it.
 
 copy `rmsf.txt` back to your computer by running the following command on the terminal connected to your local computer
 
@@ -172,3 +212,24 @@ plt.xlabel('Residue')
 plt.ylabel('RMSF (Å)')
 plt.show()
 ```
+
+## Get PDB files from the trajectory
+
+if you are following option 1:
+
+```
+trajout struct pdb offset 100 multi
+```
+
+ at this point all the commands should be entered. To run the commands simply type:
+
+```
+run
+```
+
+After processing is complete, type `quit` to exit the application.
+
+if you are following option 2 add the line at the end of the file and run it.
+
+This will generate many files named `struct***.pdb`, we are going to grab the one with the largest number indicating the last frame of the simulation and rename it `last.pdb`.
+
